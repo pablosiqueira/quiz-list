@@ -120,7 +120,7 @@
                         <button type="button" class="btn btn-danger" id="remove-ans-button" onclick="removeRadioInput()" disabled>Remover Campo</button>
                       </div>
 
-                      <div class="btn-group my-2" role="group" aria-label="Add/Remove Answer Fields (min of 2 fields)">
+                      <div class="d-grid gap-2 d-md-flex justify-content-md-center my-2" role="group" aria-label="Add/Remove Answer Fields (min of 2 fields)">
                         <button class="btn btn-danger " onclick="clearQuestion()">Limpar</button>
                         <button class="btn btn-primary " id="btn-qst-save" onclick="addQuestion()">Salvar Pergunta</button>
                         <button class="btn btn-success d-none" id="btn-qst-edit" onclick="changeQuestion()">Editar Pergunta</button>  
@@ -129,7 +129,7 @@
 
                     </div>
 
-
+                    <div class="table-responsive">
                         <table class="table" id="question-table">
                             <thead>
                               <tr class="text-center">
@@ -143,6 +143,7 @@
                               <!-- Questions will be added here -->
                             </tbody>
                           </table>
+                    </div>      
                     </div>
                     <span id="alert-msg-name" class="text-center d-block mb-2 fs-5"></span>
                     <div class="modal-footer">
@@ -153,7 +154,8 @@
             </div>
         </div>
         
-        <table class="table" id="quiz-table">
+        <div class="table-responsive">
+          <table class="table table-hover" id="quiz-table">
             <thead>
               <tr class="text-center">
                 <th scope="col">Código</th>
@@ -166,6 +168,7 @@
               <!-- Quiz information will be loaded by the javascript file -->
             </tbody>
           </table>
+        </div>
 
 <!-- Details Modal -->
 <div class="modal fade" id="details-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="details-quiz" aria-hidden="true">
@@ -175,7 +178,7 @@
         <h5 class="modal-title" id="details-quiz"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" id="details-modal-body">
+      <div class="modal-body d-block mx-auto" id="details-modal-body">
         <!-- Question Details will be generated here -->
       </div>
       <div class="modal-footer">

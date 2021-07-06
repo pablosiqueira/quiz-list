@@ -82,6 +82,7 @@ function initTable(){   //Fill the quiz table in the first load
 
 function generateQuizModal(mode,id){ //clean modal to show the selected data
     $("#question-table-body").empty()
+    $('#alert-msg-name').html('')
     if (mode == 'add'){ 
         console.log('new quiz')    
         var quizes_init_size = Object.keys(quizes).length + 1
@@ -124,6 +125,17 @@ function getId(element){
     return id
 }
 
+function getQuestSize(id){ //get number of questions
+    var size = Object.keys(quizes[id].questions).length
+    var quest_count = 0 
+    for(var i = 1; i < size + 1; i++){
+        if(quizes[id].questions[i].status == 'Postada'){
+            quest_count++
+        }
+    }
+    return quest_count
+}
+
 function createEdit(){
     var id = getId("#input-desc") //get Id
     var data = getNameandDate() //get name and date fields
@@ -140,7 +152,8 @@ function createEdit(){
             quizes[id].dates.end.year = data[1][0]
             quizes[id].dates.end.month = data[1][1]
             quizes[id].dates.end.day = data[1][2]
-            editTable(id,data[0],Object.keys(quizes[id].questions).length) //edit table
+            var questions_size = getQuestSize(id)
+            editTable(id,data[0],questions_size) //edit table
             alertMsg('#alert-msg-name','text-danger','text-success','Quiz editado')
         }else{ // if the quiz doesn't exist the function will create it
             createQuiz(id,data) // create data
@@ -170,15 +183,14 @@ function editTable(id,name,qnt){ //edit table from home
     document.getElementById('quiz-' + id).children[2].textContent = qnt
 }
 
-function actions(id){ // add edit and delete icons to the quiz table
+function actions(id){ // details, edit and delete icons section in the quiz table
     $("#quiz-" + id).append("<td class='d-flex justify-content-evenly'></td>")
-    $("#quiz-" + id + "> td").last().append("<a class='details-icon'><i class='bi bi-plus-square d-flex flex-column' data-bs-toggle='modal' data-bs-target='#details-modal' > Detalhes</i></a>")
-    $("#quiz-" + id + "> td").last().append("<a class='add-icon'><i class='bi bi-pencil d-flex flex-column' data-bs-toggle='modal' data-bs-target='#quiz-modal' > Editar</i></a>")
-    $("#quiz-" + id + "> td").last().append("<a class='del-icon'><i class='bi bi-trash d-flex flex-column'> Exluir</i></a>")
+    $("#quiz-" + id + "> td").last().append("<a class='details-icon'><i class='bi bi-plus-square d-flex flex-column mx-1' data-bs-toggle='modal' data-bs-target='#details-modal' > Detalhes </i></a>")
+    $("#quiz-" + id + "> td").last().append("<a class='add-icon'><i class='bi bi-pencil d-flex flex-column mx-1' data-bs-toggle='modal' data-bs-target='#quiz-modal' > Editar </i></a>")
+    $("#quiz-" + id + "> td").last().append("<a class='del-icon'><i class='bi bi-trash d-flex flex-column mx-1'> Exluir </i></a>")
     $('#quiz-' + id +'> td:nth-child(4) > a:nth-child(1)').attr('onClick',"generateQuizDetails("+ id + ")") //open modal for details
     $('#quiz-' + id +'> td:nth-child(4) > a:nth-child(2)').attr('onClick',"generateQuizModal('edit',"+ id + ")") //open modal for editing
     $('#quiz-' + id +'> td:nth-child(4) > a:nth-child(3)').attr('onClick',"remove(" + id + ",'quiz-',0)") //remove
-
 }
 
 function generateQuizDetails(id){ //create the data for the details modal
@@ -214,6 +226,8 @@ function remove(id,mode,parentId){ // id = quiz-1 removing from list and updatin
     }else{
         //delete quizes[parentId].questions[id]
         quizes[parentId].questions[id].status = 'Excluida'
+        var questions_size = getQuestSize(parentId)
+        editTable(parentId,quizes[parentId].name,questions_size) //update quizes table
     }
 }
 
@@ -236,8 +250,8 @@ function addQuestion(){ ///ok
                 console.log(quizes)
             }
         }
-        console.log('sucess')
-        editTable(id,quizes[id].name,Object.keys(quizes[id].questions).length) //update quizes table
+        var questions_size = getQuestSize(id)
+        editTable(id,quizes[id].name,questions_size) //update quizes table
 
     }else{
         //ask to mark and/or fill fields
@@ -254,7 +268,6 @@ function checkRadios(){ //see if a radio is checked
         var is_check = $('#questRadio' + i).is(':checked')
         var text_check = $('#textQst' + i).val()
         //see if text is null
-        console.log('is_check ' + is_check)
         if (is_check){
             checked = i
             check_text[0] = i
@@ -263,7 +276,6 @@ function checkRadios(){ //see if a radio is checked
             check_text[1] = 1
         }
     }
-    console.log(checked)
     return check_text
 }
 
@@ -297,7 +309,7 @@ function checkNameDateNull(){ //check if name and/or date is null
     return existsNull
 }
 
-function alertMsg(id,remove,add,msg){
+function alertMsg(id,remove,add,msg){ //edit the error or success message
     $(id).html(msg)
     $(id).removeClass(remove)
     $(id).addClass(add)
